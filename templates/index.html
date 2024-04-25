@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Photo Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+        #container {
+            display: flex;
+            width: 100%;
+        }
+        #photoContainer {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #mapContainer {
+            width: 50%;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="photoContainer">
+            <img id="photo" src="{{ url_for('static', filename=photo_filename) }}" alt="Campus Photo" />
+        </div>
+        <div id="mapContainer">
+            <div id="map"></div>
+            <button id="submitGuess" onclick="submitGuess()">Submit Guess</button>
+        </div>
+        <div id="scoreMessage"></div>
+        <button id="nextRound" style="display: none;" onclick="nextRound()">Next Round</button>
+    </div>
+    <script>
+    let map;
+    let marker;
+    let photoData = {{ photo_data | tojson | safe}};
+
+    function initMap() {
+        const csuf = { lat: 33.8825, lng: -117.8854 }; // Coordinates of CSUF
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 17,
+            center: csuf,
+        });
+
+        map.addListener('click', function(e) {
+            placeMarkerAndPanTo(e.latLng, map);
+        });
+    }
+    
+
+    function placeMarkerAndPanTo(latLng, map) {
+        // Remove the previous marker, if any
+        if (marker) {
+            marker.setMap(null);
+        }
+
+        // Place a new marker at the click location
+        marker = new google.maps.Marker({
+            position: latLng,
+            map: map
+        });
+
+        map.panTo(latLng);
+    }
+
+    function submitGuess() {
+        if (marker) {
+            const latLng = marker.getPosition();
+            fetch('/check_guess', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    guess: { lat: latLng.lat(), lng: latLng.lng() },
+                    correct: { lat: photoData.lat, lng: photoData.lng }
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.game_over) {
+                    // Game is over, show the total score
+                    document.getElementById('container').innerHTML = `
+                    <h2>Game Over! Your total score is: ${data.total_score}</h2>
+                    <button onclick="playAgain()">Play Again</button>
+                    `;
+                } else {
+                    // Game is not over, show score and distance, and "Next Round" button
+                    let distanceMeters = data.distance_km * 1000;
+                    document.getElementById('scoreMessage').innerText = `Points Acquired: ${data.score}, Distance: ${distanceMeters.toFixed(2)} meters away.`;
+                    document.getElementById('nextRound').style.display = 'block';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        } else {
+            document.getElementById('scoreMessage').innerText = 'Please place a marker on the map before submitting your guess.';
+        }
+    }
+
+    function nextRound() {
+        // Reload the page for the next round
+        location.reload();
+    }
+
+    function playAgain() {
+        // This makes a request to the server to reset the game state
+        fetch('/reset_game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                // Redirect to the home page to start a new game
+                window.location.href = '/';
+            }
+        });
+    }
+
+    window.initMap = initMap;
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-mu5B3CZu20NZu1YMZPMd-zJENmNbq-M&callback=initMap">
+    </script>
+</body>
+</html>
