@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, redirect, url_for, request, jsonify, session
 import random
 import math
 import os
@@ -6,6 +6,7 @@ from math import radians, cos, sin, asin, sqrt
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
+app.static_folder = 'static'  # Default static folder
 
 photos = {
     "001": {"filename": "temp1.jpg", "location": "Library"},
@@ -55,9 +56,12 @@ def calculate_score_and_distance(user_guess, correct_coords):
     
     return score, distance_km
 
-
 @app.route('/')
 def home():
+    return render_template('home.html')
+
+@app.route('/play', methods=['GET', 'POST'])
+def play():
     if 'round' not in session:
         session['round'] = 1  # Starting round
         session['total_score'] = 0  # Starting total score
@@ -106,9 +110,10 @@ def check_guess():
 def next_round():
     # This route prepares the next round
     if 'round' in session and session['round'] <= 5:
-        return redirect(url_for('home'))
+        return redirect(url_for('play'))
     else:
         # If the game is over, redirect to a game over page or reset the game
+        reset_game()
         return render_template('game_over.html', total_score=session['total_score'])
     
 
