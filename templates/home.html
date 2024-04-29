@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Home - Where is Tuffy?</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karantina:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS from static folder -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Karantina:wght@300;400;700&display=swap');
+
+.Karantina-Light {
+    font-family: "Karantina", system-ui;
+    font-weight: 300;
+    font-style: normal;
+  }
+  
+  .Karantina-Regular {
+    font-family: "Karantina", system-ui;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .Karantina {
+    font-family: "Karantina", system-ui;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+
+.box {
+    width: 1920px;
+    height: 965px;
+  }
+  
+  .box .main-page {
+    position: fixed;
+    width: 1934px;
+    height: 965px;
+    top: 0;
+    left: 0;
+  }
+  
+  body {
+    background-color: #f7cb89;
+  }
+  
+  .box .whereistuffy {
+      width: 900px;
+      position: absolute;
+      font-size: 180px;
+      display: inline-block;
+      font-family: Karantina;
+      font-weight: 700;
+      color: #1d519f;
+      text-align: center;
+      top: 384px;
+      left: 500px;
+  }
+
+  .box .csuf {
+    position: absolute;
+    top: 900px;
+    left: 1716px;
+    font-family: Karantina;
+    font-weight: 700;
+    color: #000000;
+    font-size: 36px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+    ;
+  }
+  
+  .box .legalnotice {
+    position: absolute;
+    top: 900px;
+    left: 1539px;
+    font-family: Karantina;
+    font-weight: 700;
+    color: #000000;
+    font-size: 36px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+    
+  }
+  
+  .box .play {
+    position: absolute;
+    top: 570px;
+    left: 503px;
+    font-family: Karantina;
+    font-weight: 700;
+    color: #000000;
+    font-size: 48px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+  
+  
+  .box .about {
+    position: absolute;
+    top: 13px;
+    left: 20px;
+    font-family: Karantina;
+    font-weight: 700;
+    color: #000000;
+    font-size: 36px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+
+  }
+
+  
+  .box .line {
+    position: absolute;
+    width: 1920px;
+    height: 5px;
+    top: 57px;
+    left: 0;
+  }
+
+    </style>
+  </head>
+
+  <body>
+    <div class="box">
+      <div class="main-page">
+        <div class="whereistuffy">WHERE IS TUFFY?</div>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <!-- Updated image source with url_for -->
+        <img class="line" src="{{ url_for('static', filename='topline.png') }}" alt="Top Line" />
+        
+        <!-- Navigation links -->
+        <a class="csuf" href="https://www.fullerton.edu">CSU Fullerton</a>
+        <a class="legalnotice" href="/legalnotice">Legal Notice</a>
+        <a class="play" href="{{ url_for('play') }}">Play</a>
+        <a class="about" href="{{ url_for('static', filename='about.html') }}">About</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
