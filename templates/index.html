@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Photo Game</title>
     <style>
+        
         body {
+            background-color: #f7cb89;
             display: flex;
             justify-content: center;
             align-items: stretch;
@@ -28,23 +30,118 @@
             width: 50%;
         }
         #map {
-            height: 100%;
-            width: 100%;
+            position: absolute;
+            top: 150px;
+            left: 1195px;
+            height: 50%;
+            width: 25%;
         }
         img {
             max-width: 100%;
             height: auto;
         }
+
+        .submit-container {
+            position: relative;  /* Necessary for absolute positioning to work within this container */
+            width: 500px;  /* Set appropriate width */
+            height: 300px;  /* Set appropriate height */
+}
+
+        .submitbackground {
+            position: absolute;
+            top: 680px;  
+            left: 1275px; 
+            max-width: 100%;
+            height: auto;
+            z-index: 1;
+    }
+
+        .submitGuess {
+            position: absolute;
+            top: 715px;  
+            left: 1320px;  
+            font-family: Karantina;
+            font-weight: 700;
+            color: #ff6200;
+            font-size: 36px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+            white-space: nowrap;
+            z-index: 2;
+        }
+
+        .whereistuffy {
+            position: absolute;
+            top: 10px;
+            left: 825px;
+            font-family: Karantina;
+            font-weight: 700;
+            color: #1d519f;
+            font-size: 36px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+            white-space: nowrap;
+
+    }
+
+       .line {
+            position: absolute;
+            length: 1920px;
+            height: 5px;
+            top: 57px;
+            left: 0;
+    }
+
+         .replay {
+            position: absolute;
+            top: 450px;
+            left: 875px;
+            font-family: Karantina;
+            font-weight: 700;
+            color: #ff6200;
+            font-size: 36px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+            white-space: nowrap;
+    
+  }
+        .gameover {
+            position: absolute;
+            top: 350px;
+            left: 675px;
+            font-family: Karantina;
+            font-weight: 700;
+            color: #000000;
+            font-size: 36px;
+            text-align: center;
+            letter-spacing: 0;
+            line-height: normal;
+            white-space: nowrap;
+    
+  }
     </style>
 </head>
 <body>
+
+    <a class="whereistuffy" onclick="window.location.href = '{{ url_for('home') }}'">Where Is Tuffy</a>
+    <img class="line" src="{{ url_for('static', filename='topline.png') }}" alt="Top Line" />
+    
     <div id="container">
         <div id="photoContainer">
             <img id="photo" src="{{ url_for('static', filename=photo_filename) }}" alt="Campus Photo" />
         </div>
         <div id="mapContainer">
             <div id="map"></div>
-            <button id="submitGuess" onclick="submitGuess()">Submit Guess</button>
+        <div id = "submit">
+            <a class="submitGuess" onclick="submitGuess()">Submit Guess</a>
+            <a class="submitbackground">
+               <img class="submitbox" src="{{ url_for('static', filename='submitbutton.png') }}" onclick="submitGuess()"></a>
+            </a>
+        </div>
+
         </div>
         <div id="scoreMessage"></div>
         <button id="nextRound" style="display: none;" onclick="nextRound()">Next Round</button>
@@ -100,8 +197,11 @@
                 if (data.game_over) {
                     // Game is over, show the total score
                     document.getElementById('container').innerHTML = `
-                    <h2>Game Over! Your total score is: ${data.total_score}</h2>
-                    <button onclick="playAgain()">Play Again</button>
+                    <div class="gameover">
+                           Game Over! Your total score is: ${data.total_score}
+                    </div>  
+
+                    <a class="replay" onclick="playAgain()">Play Again</a>
                     `;
                 } else {
                     // Game is not over, show score and distance, and "Next Round" button
@@ -133,7 +233,7 @@
         .then(data => {
             if (data.status === 'ok') {
                 // Redirect to the home page to start a new game
-                window.location.href = '/';
+                window.location.href = '/play';
             }
         });
     }
