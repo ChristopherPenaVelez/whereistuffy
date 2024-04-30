@@ -43,7 +43,3 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 - CSUF for the beautiful and inspiring campus.
 - All the students and faculty who make CSUF the lively place it is.
 - The creators of GeoGuessr for the original game concept that inspired this project.
-
-## Play Now!
-
-Ready to test your knowledge of the CSUF campus? [Play "Where Is Tuffy?" now!](game-live-link) <!-- Replace 'game-live-link' with the actual URL where the game is hosted -->
